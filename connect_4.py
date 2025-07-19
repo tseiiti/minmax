@@ -3,7 +3,7 @@ from min_max import MinMax, Tabuleiro
 # import time
 
 class Jogo:
-  def __init__(self, tabuleiro: Tabuleiro = None, level: int = 2, simbolo_maquina: str = 'X', simbolo_oponente: str = 'O'):
+  def __init__(self, tabuleiro: Tabuleiro = None, level: int = 2, simbolo_maquina: str = 'O', simbolo_oponente: str = 'X'):
     if tabuleiro == None: tabuleiro = Tabuleiro()
     self.tabuleiro = tabuleiro
     self.min_max = MinMax(self.tabuleiro, simbolo_maquina, simbolo_oponente)
@@ -61,5 +61,7 @@ class Jogo:
       if self.jogada_avaliar(): break
 
 if __name__ == "__main__":
-  jogo = Jogo(simbolo_maquina = 'O', simbolo_oponente = 'X')
+  # tabuleiro = Tabuleiro(linha = 9, coluna = 9)
+  # jogo = Jogo(tabuleiro = tabuleiro)
+  jogo = Jogo()
   jogo.main()
