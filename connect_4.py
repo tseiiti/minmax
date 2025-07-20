@@ -3,12 +3,14 @@ from min_max import MinMax, Tabuleiro
 # import time
 
 class Jogo:
-  def __init__(self, tabuleiro: Tabuleiro = None, level: int = 2, simbolo_maquina: str = 'O', simbolo_oponente: str = 'X'):
-    if tabuleiro == None: tabuleiro = Tabuleiro()
-    self.tabuleiro = tabuleiro
-    self.min_max = MinMax(self.tabuleiro, simbolo_maquina, simbolo_oponente)
+  def __init__(self, linha: int = 7, coluna: int = 7, oponente: str = 'humano', level: int = 2, level_professor: int = 4):
+    self.tabuleiro = Tabuleiro(linha = linha, coluna = coluna)
+    self.min_max = MinMax(self.tabuleiro, 'O', 'X')
+    self.oponente = oponente
     self.level = level
+    self.level_professor = level_professor
     self.rodada = 0
+    self.encerrar = False
 
   def jogada(self, linha: int, coluna: int, simbolo: str):
     self.tabuleiro.matrix[linha][coluna] = simbolo
@@ -16,14 +18,18 @@ class Jogo:
       self.tabuleiro.msg[2] = f'Máquina ({self.min_max.simbolo_maquina}) jogou em {coluna + 1} ({linha + 1})'
     else:
       self.tabuleiro.msg[3] = f'Oponente ({self.min_max.simbolo_oponente}) jogou em {coluna + 1} ({linha + 1})'
+    self.jogada_avaliar()
     
   def jogada_humano(self):
     while(True):
       coluna = input('Informe a coluna ou zero para encerrar: ')
       if coluna in '1234567890':
+        if coluna == '0': 
+          self.tabuleiro.msg[9] = 'Desistiu'
+          self.encerrar = True
         coluna = int(coluna) - 1
         linha = self.tabuleiro.livre(coluna)
-      if linha >= 0: break
+      if linha >= 0 or coluna < 0: break
       else: print('Coluna inválida. Tente outra.')
     self.jogada(linha, coluna, self.min_max.simbolo_oponente)
 
@@ -33,35 +39,48 @@ class Jogo:
     self.jogada(linha, coluna, self.min_max.simbolo_maquina)
     
   def jogada_oponente(self) -> bool:
-    coluna = professor.minimax(jogo.tabuleiro.matrix, 4)
+    coluna = professor.minimax(self.tabuleiro.matrix, self.level_professor)
     linha = self.tabuleiro.livre(coluna)
     self.jogada(linha, coluna, self.min_max.simbolo_oponente)
     
   def jogada_avaliar(self) -> bool:
     self.tabuleiro.msg[0] = f'Rodada: {self.rodada}'
-    pontos, msg = self.min_max.resultado()
-    self.tabuleiro.msg[1] = f'Placar: {pontos} | {professor.funcaoAvaliacao(self.tabuleiro.matrix)}'
-    self.tabuleiro.imprimir()
+    placar = self.min_max.avaliacao(self.tabuleiro)
+    self.tabuleiro.msg[1] = f'Placar: {placar} | {professor.funcaoAvaliacao(self.tabuleiro.matrix)}'
+    if placar > 5000:
+      self.tabuleiro.msg[9] = 'Máquina ganhou'
+      self.encerrar= True
+    elif placar < -5000:
+      self.tabuleiro.msg[9] = 'Oponente ganhou'
+      self.encerrar= True
+    elif self.tabuleiro.restantes() == 0:
+      self.tabuleiro.msg[9] = 'Empate'
+      self.encerrar= True
     # time.sleep(1)
-    if msg != '':
-      print(msg)
-      return True
-    return False
     
-  def main(self):
-    # self.jogada(6, 3, self.min_max.simbolo_oponente)
-    # self.jogada_maquina()
-    self.jogada_avaliar()
+  def jogar(self):
+    self.tabuleiro.imprimir()
+    if self.oponente == 'professor':
+      self.jogada(6, 3, self.min_max.simbolo_oponente)
+      self.jogada_maquina()
 
     while True:
       self.rodada += 1
-      self.jogada_oponente()
-      # self.jogada_humano()
+      if self.oponente == 'professor':
+        self.jogada_oponente()
+      else:
+        self.jogada_humano()
       self.jogada_maquina()
-      if self.jogada_avaliar(): break
+      
+      self.tabuleiro.imprimir()
+      if self.encerrar: break
+
+# jogo = None
+# def new(l: int = 2, o: str = 'humano'):
+#   jogo = Jogo(level = l, oponente = o)
 
 if __name__ == "__main__":
   # tabuleiro = Tabuleiro(linha = 9, coluna = 9)
   # jogo = Jogo(tabuleiro = tabuleiro)
-  jogo = Jogo()
-  jogo.main()
+  jogo = Jogo(oponente = 'professor')
+  jogo.jogar()

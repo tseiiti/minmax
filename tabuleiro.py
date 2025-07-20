@@ -5,7 +5,7 @@ class Tabuleiro:
     self.matrix = matrix
     self.linha  = len(matrix)
     self.coluna = len(matrix[0])
-    self.msg = [ '' for _ in range(4) ]
+    self.msg = [ '' for _ in range(10) ]
   
   def livre(self, coluna: int, linha: int = None) -> int:
     if coluna < 0 or coluna >= self.coluna: return -1
@@ -42,12 +42,13 @@ class Tabuleiro:
       t += f'{i + 1:2} '
       for j in range(self.coluna): t += f'| {self.matrix[i][j] } '
       t += '|'
-      if i < 4 and self.msg[i] != '': t += '   - ' + self.msg[i]
+      if self.msg[i] != '': t += '   - ' + self.msg[i]
       t += '\n'
     t += lin
     t += '   '
     for j in range(self.coluna): t += f'  {j + 1} '
     t += ' \n'
+    if self.msg[9] != '': t += self.msg[9]
     print(t)
 
   def restantes(self) -> int:

@@ -35,17 +35,6 @@ class MinMax:
     maquina = self.pontuar(validacao, self.simbolo_maquina)
     oponente = self.pontuar(validacao, self.simbolo_oponente)
     return maquina - oponente
-  
-  def resultado(self):
-    pontos = self.avaliacao(self.tabuleiro)
-    msg = ''
-    if pontos > 5000:
-      msg = 'Máquina ganhou'
-    elif pontos < -5000:
-      msg = 'Oponente ganhou'
-    elif self.tabuleiro.restantes() == 0:
-      msg = 'Empate'
-    return pontos, msg
     
   def mmax(self, tabuleiro: Tabuleiro, level: int, simbolo: str) -> int:
     if not tabuleiro: return 20000, 0
