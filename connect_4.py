@@ -21,13 +21,15 @@ class Jogo:
     self.jogada_avaliar()
     
   def jogada_humano(self):
+    linha = -1
+    coluna = 0
     while(True):
-      coluna = input('Informe a coluna ou zero para encerrar: ')
-      if coluna in '1234567890':
-        if coluna == '0': 
+      txt = input('Informe a coluna ou zero para encerrar: ')
+      if txt in '1234567890':
+        if txt == '0': 
           self.tabuleiro.msg[9] = 'Desistiu'
           self.encerrar = True
-        coluna = int(coluna) - 1
+        coluna = int(txt) - 1
         linha = self.tabuleiro.livre(coluna)
       if linha >= 0 or coluna < 0: break
       else: print('Coluna inválida. Tente outra.')
@@ -82,5 +84,6 @@ class Jogo:
 if __name__ == "__main__":
   # tabuleiro = Tabuleiro(linha = 9, coluna = 9)
   # jogo = Jogo(tabuleiro = tabuleiro)
-  jogo = Jogo(oponente = 'professor')
+  # jogo = Jogo(oponente = 'professor')
+  jogo = Jogo()
   jogo.jogar()

@@ -1,4 +1,5 @@
 from tabuleiro import Tabuleiro
+import random
 
 class MinMax:
   def __init__(self, tabuleiro: Tabuleiro, simbolo_maquina: str = 'X', simbolo_oponente: str = 'O'):
@@ -43,7 +44,10 @@ class MinMax:
     for t in tabuleiro.sucessores(simbolo):
       ponto, _ = self.mmin(t, level - 1, self.outro(simbolo))
       pontos.append(ponto)
-    return max(pontos), pontos.index(max(pontos))
+    maior = max(pontos)
+    indices =[i for i, p in enumerate(pontos) if p == maior]
+    coluna = random.choice(indices)
+    return maior, coluna
 
   def mmin(self, tabuleiro: Tabuleiro, level: int, simbolo: str) -> int:
     if not tabuleiro: return -20000, 0
@@ -52,7 +56,10 @@ class MinMax:
     for t in tabuleiro.sucessores(simbolo):
       ponto, _ = self.mmax(t, level - 1, self.outro(simbolo))
       pontos.append(ponto)
-    return min(pontos), pontos.index(min(pontos))
+    menor = min(pontos)
+    indices =[i for i, p in enumerate(pontos) if p == menor]
+    coluna = random.choice(indices)
+    return menor, coluna
     
   def outro(self, simbolo: str) -> str:
     if simbolo == self.simbolo_maquina: return self.simbolo_oponente
