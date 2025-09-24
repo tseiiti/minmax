@@ -84,6 +84,6 @@ class Jogo:
 if __name__ == "__main__":
   # tabuleiro = Tabuleiro(linha = 9, coluna = 9)
   # jogo = Jogo(tabuleiro = tabuleiro)
-  # jogo = Jogo(oponente = 'professor')
+  # jogo = Jogo(oponente = 'professor', level_professor = 5)
   jogo = Jogo()
   jogo.jogar()
